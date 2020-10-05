@@ -31,7 +31,7 @@ public class HotelReservationMain {
 			int option = sc.nextInt();
 			switch (option) {
 			case 1:
-				// Adding Hotel in the Reservation System
+				// Adding Hotel in the Reservation System with ratings and day wised prices
 				Hotel hotel = hotelReservationFunction.getHotelDetails();
 				hotelReservationFunction.addHotelToList(hotel, hotelList);
 				break;
