@@ -2,11 +2,14 @@ package hardik.hotel_reservation_system;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 public class HotelReservationFunction implements HotelReservationInterface {
 
@@ -14,6 +17,8 @@ public class HotelReservationFunction implements HotelReservationInterface {
 
 	public Hotel getHotelDetails() {
 		Hotel hotel = new Hotel();
+		// Already Entering the Weekend And WeekDays Prices for both Reward as well as
+		// Regular Users
 		System.out.println("Enter the Hotel Name: ");
 		hotel.setHotelName(sc.next());
 		System.out.println("Enter the Regular WeekDay Rate: ");
@@ -56,14 +61,49 @@ public class HotelReservationFunction implements HotelReservationInterface {
 
 	}
 
-	public void getCheapestHotel(HotelList hotelList, String from_Date, String to_Date) {
-		long no_of_days = totalDays(from_Date, to_Date);
+	public long getTotalWeekDays(String from_date, String to_date) throws ParseException {
+		SimpleDateFormat myFormat = new SimpleDateFormat("ddMMyyyy");
+		Date dateBefore = myFormat.parse(from_date);
+		Date dateAfter = myFormat.parse(to_date);
 
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(dateBefore);
+
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(dateAfter);
+		int workdays = 0;
+		if (startCal.getTimeInMillis() == endCal.getTimeInMillis()) {
+			return 0;
+		}
+
+		if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {
+			startCal.setTime(dateAfter);
+			endCal.setTime(dateBefore);
+		}
+
+		do {
+			// excluding start date
+			startCal.add(Calendar.DAY_OF_MONTH, 1);
+			if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
+					&& startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+				++workdays;
+			}
+		} while (startCal.getTimeInMillis() < endCal.getTimeInMillis()); // excluding end date
+
+		return workdays;
+	}
+
+	public void getCheapestHotel(HotelList hotelList, String from_Date, String to_Date) throws ParseException {
+		long no_of_days = totalDays(from_Date, to_Date);
+		long total_weekDays = getTotalWeekDays(from_Date, to_Date);
+		long weekend_Days = no_of_days - total_weekDays;
 		Optional<Hotel> hotel = hotelList.getHotelsList().stream()
 				.min(Comparator.comparing(Hotel::getWeekDayRatesRegular));
 		if (hotel.isPresent()) {
 			System.out.println("Hotel :" + hotel.get().getHotelName() + " TotalExpense: "
-					+ (hotel.get().getWeekDayRatesRegular() * no_of_days) + " ");
+					+ ((hotel.get().getWeekDayRatesRegular() * total_weekDays)
+							+ hotel.get().getWeekendRatesRegular() * weekend_Days)
+					+ " ");
 		} else {
 			System.out.println("No Hotels Present in the System");
 		}

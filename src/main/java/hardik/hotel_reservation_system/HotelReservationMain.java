@@ -1,5 +1,6 @@
 package hardik.hotel_reservation_system;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,7 +16,7 @@ public class HotelReservationMain {
 		System.out.println("0-Exit");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Welcome to Hotel Reservation System!!");
 
@@ -35,7 +36,7 @@ public class HotelReservationMain {
 				hotelReservationFunction.addHotelToList(hotel, hotelList);
 				break;
 			case 2:
-				// Finding Cheapest Hotel
+				// Finding Cheapest Hotel based on Weekend and Weekdays Rates
 				System.out.println("Enter the dates:-");
 				String from_Date = sc.next();
 				String to_Date = sc.next();
