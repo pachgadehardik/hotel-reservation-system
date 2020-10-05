@@ -7,7 +7,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Predicate;
@@ -100,18 +103,24 @@ public class HotelReservationFunction implements HotelReservationInterface {
 		long total_weekDays = getTotalWeekDays(from_Date, to_Date);
 		long weekend_Days = no_of_days - total_weekDays;
 
-		// Get the list of expense for staying in a hotel
-		List<Long> price = hotelList.getHotelsList().stream().map(h -> {
-			return h.getWeekDayRatesRegular() * total_weekDays + h.getWeekendRatesRegular() * weekend_Days;
-		}).collect(Collectors.toList());
-
-		long min = Collections.min(price);
-
-		for (int i = 0; i < price.size(); i++) {
-			if (price.get(i) == min) {
-				System.out.println("HotelName: " + hotelList.getHotelsList().get(i).getHotelName() + "and PRice: "
-						+ price.get(i));
-			}
+		
+		Map<Hotel, Long> priceMap = new HashMap<Hotel, Long>();
+		for (int i = 0; i < hotelList.getHotelsList().size(); i++) {
+			long cost = hotelList.getHotelsList().get(i).getWeekDayRatesRegular() * total_weekDays
+					+ hotelList.getHotelsList().get(i).getWeekendRatesRegular();
+			hotelList.getHotelsList().get(i).setTotalPrice(cost);
+			priceMap.put(hotelList.getHotelsList().get(i), cost);
 		}
+//			priceMap.entrySet().stream().map()
+		Entry<Hotel, Long> min = Collections.min(priceMap.entrySet(), Comparator.comparingLong(Entry::getValue));
+
+		List<Hotel> cheapHotels = priceMap.keySet().stream().filter(m -> m.getTotalPrice() == min.getValue())
+				.collect(Collectors.toList());
+
+		int rating = cheapHotels.stream().max(Comparator.comparing(Hotel::getRating)).get().getRating();
+
+		System.out.println("Best Rated Cheapest Hotel is:");
+		System.out.println(cheapHotels.stream().filter(m -> m.getRating() == rating).collect(Collectors.toList()));
+
 	}
 }

@@ -8,7 +8,8 @@ public class Hotel {
 	private int weekDayRatesReward;
 	private int weekendRatesReward;
 	private int rating;
-
+	private long totalPrice;
+	
 	public int getRating() {
 		return rating;
 	}
@@ -56,13 +57,21 @@ public class Hotel {
 	public void setWeekendRatesReward(int weekendRatesReward) {
 		this.weekendRatesReward = weekendRatesReward;
 	}
+	
+	public void setTotalPrice(long totalPrice) {
+		this.totalPrice =  totalPrice;
+	}
+	public long getTotalPrice() {
+		return totalPrice;
+	}
+	
 
 	@Override
 	public String toString() {
 		return "Hotel: " + this.getHotelName() + " Regular Weekend rates: " + this.getWeekendRatesRegular()
 				+ " Reawards Weekend Rates: " + this.getWeekendRatesReward() + " Regular Weekdays Rates: "
 				+ this.getWeekDayRatesRegular() + " Rewards WeekDay Rates: " + this.getWeekDayRatesReward() + " Rating: "
-				+ this.getRating();
+				+ this.getRating() +"Total Cost: "+ this.totalPrice ;
 	}
 
 }

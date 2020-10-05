@@ -36,11 +36,12 @@ public class HotelReservationMain {
 				hotelReservationFunction.addHotelToList(hotel, hotelList);
 				break;
 			case 2:
-				// Finding Cheapest Hotel based on Weekend and Weekdays Rates
+				// Finding Cheapest Hotel based on Weekend and Weekdays Rates along with Rating
 				System.out.println("Enter the dates:-");
 				String from_Date = sc.next();
 				String to_Date = sc.next();
 				hotelReservationFunction.getCheapestHotel(hotelList, from_Date, to_Date);
+				break;
 			default:
 				flag = false;
 				break;
