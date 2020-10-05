@@ -59,9 +59,9 @@ public class Hotel {
 
 	@Override
 	public String toString() {
-		return "Hotel " + this.getHotelName() + " Regular Weekend rates " + this.getWeekendRatesRegular()
-				+ " Reawards Weekend Rates : " + this.getWeekendRatesReward() + " Regular Weekdays Rates "
-				+ this.getWeekDayRatesRegular() + " Rewards WeekDay Rates" + this.getWeekDayRatesReward() + " Rating "
+		return "Hotel: " + this.getHotelName() + " Regular Weekend rates: " + this.getWeekendRatesRegular()
+				+ " Reawards Weekend Rates: " + this.getWeekendRatesReward() + " Regular Weekdays Rates: "
+				+ this.getWeekDayRatesRegular() + " Rewards WeekDay Rates: " + this.getWeekDayRatesReward() + " Rating: "
 				+ this.getRating();
 	}
 

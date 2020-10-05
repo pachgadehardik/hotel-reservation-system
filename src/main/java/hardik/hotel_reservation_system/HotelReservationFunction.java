@@ -4,12 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class HotelReservationFunction implements HotelReservationInterface {
 
@@ -97,15 +99,19 @@ public class HotelReservationFunction implements HotelReservationInterface {
 		long no_of_days = totalDays(from_Date, to_Date);
 		long total_weekDays = getTotalWeekDays(from_Date, to_Date);
 		long weekend_Days = no_of_days - total_weekDays;
-		Optional<Hotel> hotel = hotelList.getHotelsList().stream()
-				.min(Comparator.comparing(Hotel::getWeekDayRatesRegular));
-		if (hotel.isPresent()) {
-			System.out.println("Hotel :" + hotel.get().getHotelName() + " TotalExpense: "
-					+ ((hotel.get().getWeekDayRatesRegular() * total_weekDays)
-							+ hotel.get().getWeekendRatesRegular() * weekend_Days)
-					+ " ");
-		} else {
-			System.out.println("No Hotels Present in the System");
+
+		// Get the list of expense for staying in a hotel
+		List<Long> price = hotelList.getHotelsList().stream().map(h -> {
+			return h.getWeekDayRatesRegular() * total_weekDays + h.getWeekendRatesRegular() * weekend_Days;
+		}).collect(Collectors.toList());
+
+		long min = Collections.min(price);
+
+		for (int i = 0; i < price.size(); i++) {
+			if (price.get(i) == min) {
+				System.out.println("HotelName: " + hotelList.getHotelsList().get(i).getHotelName() + "and PRice: "
+						+ price.get(i));
+			}
 		}
 	}
 }
