@@ -103,7 +103,6 @@ public class HotelReservationFunction implements HotelReservationInterface {
 		long total_weekDays = getTotalWeekDays(from_Date, to_Date);
 		long weekend_Days = no_of_days - total_weekDays;
 
-		
 		Map<Hotel, Long> priceMap = new HashMap<Hotel, Long>();
 		for (int i = 0; i < hotelList.getHotelsList().size(); i++) {
 			long cost = hotelList.getHotelsList().get(i).getWeekDayRatesRegular() * total_weekDays
@@ -122,5 +121,15 @@ public class HotelReservationFunction implements HotelReservationInterface {
 		System.out.println("Best Rated Cheapest Hotel is:");
 		System.out.println(cheapHotels.stream().filter(m -> m.getRating() == rating).collect(Collectors.toList()));
 
+	}
+
+	public void getBestRatedHotel(HotelList hotelList, String from_Date1, String to_Date1) throws ParseException {
+		long no_of_days = totalDays(from_Date1, to_Date1);
+		long total_weekDays = getTotalWeekDays(from_Date1, to_Date1);
+		long weekend_Days = no_of_days - total_weekDays;
+		System.out.println("Overall Best Rated Hotel is :");
+		int bestRating = hotelList.getHotelsList().stream().max(Comparator.comparing(Hotel::getRating)).get().getRating();
+		System.out.println(hotelList.getHotelsList().stream().filter(m -> m.getRating() == bestRating).collect(Collectors.toList()));
+		
 	}
 }

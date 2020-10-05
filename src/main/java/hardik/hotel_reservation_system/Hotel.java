@@ -71,7 +71,7 @@ public class Hotel {
 		return "Hotel: " + this.getHotelName() + " Regular Weekend rates: " + this.getWeekendRatesRegular()
 				+ " Reawards Weekend Rates: " + this.getWeekendRatesReward() + " Regular Weekdays Rates: "
 				+ this.getWeekDayRatesRegular() + " Rewards WeekDay Rates: " + this.getWeekDayRatesReward() + " Rating: "
-				+ this.getRating() +"Total Cost: "+ this.totalPrice ;
+				+ this.getRating() +" Total Cost: "+ this.totalPrice +"\n";
 	}
 
 }
