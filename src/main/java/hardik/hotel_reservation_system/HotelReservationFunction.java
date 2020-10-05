@@ -98,28 +98,48 @@ public class HotelReservationFunction implements HotelReservationInterface {
 		return workdays;
 	}
 
+	//Calucalating Best Hotel by Rating for Both Rewarded and Regular Customer
 	public void getCheapestHotel(HotelList hotelList, String from_Date, String to_Date) throws ParseException {
 		long no_of_days = totalDays(from_Date, to_Date);
 		long total_weekDays = getTotalWeekDays(from_Date, to_Date);
 		long weekend_Days = no_of_days - total_weekDays;
+		System.out.println("1-Regular 2-Rewarded");
+		int op = sc.nextInt();
+		switch(op) {
+			case 1:
+				Map<Hotel, Long> priceMap = new HashMap<Hotel, Long>();
+				for (int i = 0; i < hotelList.getHotelsList().size(); i++) {
+					long cost = hotelList.getHotelsList().get(i).getWeekDayRatesRegular() * total_weekDays
+							+ hotelList.getHotelsList().get(i).getWeekendRatesRegular();
+					hotelList.getHotelsList().get(i).setTotalPrice(cost);
+					priceMap.put(hotelList.getHotelsList().get(i), cost);
+				}
+				Entry<Hotel, Long> min = Collections.min(priceMap.entrySet(), Comparator.comparingLong(Entry::getValue));
 
-		Map<Hotel, Long> priceMap = new HashMap<Hotel, Long>();
-		for (int i = 0; i < hotelList.getHotelsList().size(); i++) {
-			long cost = hotelList.getHotelsList().get(i).getWeekDayRatesRegular() * total_weekDays
-					+ hotelList.getHotelsList().get(i).getWeekendRatesRegular();
-			hotelList.getHotelsList().get(i).setTotalPrice(cost);
-			priceMap.put(hotelList.getHotelsList().get(i), cost);
+				List<Hotel> cheapHotels = priceMap.keySet().stream().filter(m -> m.getTotalPrice() == min.getValue())
+						.collect(Collectors.toList());
+
+				int rating = cheapHotels.stream().max(Comparator.comparing(Hotel::getRating)).get().getRating();
+
+				System.out.println("Best Rated Cheapest Hotel is:");
+				System.out.println(cheapHotels.stream().filter(m -> m.getRating() == rating).collect(Collectors.toList()));
+				break;
+			case 2:
+				Map<Hotel, Long> priceMap1 = new HashMap<Hotel, Long>();
+				for (int i = 0; i < hotelList.getHotelsList().size(); i++) {
+					long cost = hotelList.getHotelsList().get(i).getWeekDayRatesReward() * total_weekDays
+							+ hotelList.getHotelsList().get(i).getWeekendRatesReward();
+					hotelList.getHotelsList().get(i).setTotalPrice(cost);
+					priceMap1.put(hotelList.getHotelsList().get(i), cost);
+				}
+				
+				int bestRating = hotelList.getHotelsList().stream().max(Comparator.comparing(Hotel::getRating)).get().getRating();
+				System.out.println(priceMap1.keySet().stream().filter(m -> m.getRating() == bestRating).collect(Collectors.toList()));
+				break;
+			default:
+				break;
 		}
-//			priceMap.entrySet().stream().map()
-		Entry<Hotel, Long> min = Collections.min(priceMap.entrySet(), Comparator.comparingLong(Entry::getValue));
-
-		List<Hotel> cheapHotels = priceMap.keySet().stream().filter(m -> m.getTotalPrice() == min.getValue())
-				.collect(Collectors.toList());
-
-		int rating = cheapHotels.stream().max(Comparator.comparing(Hotel::getRating)).get().getRating();
-
-		System.out.println("Best Rated Cheapest Hotel is:");
-		System.out.println(cheapHotels.stream().filter(m -> m.getRating() == rating).collect(Collectors.toList()));
+		
 
 	}
 
