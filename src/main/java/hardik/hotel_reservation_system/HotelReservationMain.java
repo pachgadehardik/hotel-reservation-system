@@ -11,6 +11,7 @@ public class HotelReservationMain {
 
 	public static void displayMenu() {
 		System.out.println("1-Add Hotel");
+		System.out.println("2-Find Cheapest Regular WeekDays");
 		System.out.println("0-Exit");
 	}
 
@@ -33,6 +34,12 @@ public class HotelReservationMain {
 				Hotel hotel = hotelReservationFunction.getHotelDetails();
 				hotelReservationFunction.addHotelToList(hotel, hotelList);
 				break;
+			case 2:
+				// Finding Cheapest Hotel
+				System.out.println("Enter the dates:-");
+				String from_Date = sc.next();
+				String to_Date = sc.next();
+				hotelReservationFunction.getCheapestHotel(hotelList, from_Date, to_Date);
 			default:
 				flag = false;
 				break;
